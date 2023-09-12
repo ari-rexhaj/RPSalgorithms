@@ -4,7 +4,7 @@
 #    P1 Move     |   P2 Move     |      Winner
 
 import enum, random, os, os.path
-from tkinter import Tk,Frame,Label,Button,Canvas,OptionMenu,LEFT,RIGHT,TOP,BOTTOM,StringVar,IntVar,Checkbutton,Entry, Menu, LabelFrame
+from tkinter import Tk, Frame, Label, Button, Canvas, OptionMenu, LEFT, RIGHT, TOP, BOTTOM, StringVar, IntVar, Checkbutton, Entry, Menu, LabelFrame
 from PIL import Image, ImageTk
 PlaysoundFound = True
 try:
@@ -988,7 +988,7 @@ def HeatmapColorHandler(P1,P2,draws):
     #only winning or losing does. (or tieing)
 
     #only winning, losing or tieing does.
-    r = P1 * 255
+    r = P1 * 255       # the parameters are entered as a number between 0 and 1, where the sum of all parameters are equal to 1
     b = P2 * 255
     g = draws * 255
 
@@ -999,26 +999,28 @@ def HeatmapColorHandler(P1,P2,draws):
     if g < 0:
         g = 0
 
-    r = hex(int(r)).lstrip("0x").rstrip("L")
-    if len(r) < 2:
+    r = hex(int(r)).lstrip("0x").rstrip("L")        # turns the number into its hexadecimal form
+    if len(r) < 2:                                  # since pythons hex() function returns the hexadecimal as just a single character or nothing if small enough, ergo we check the len of the string and depending on its value we enter str(0) into the hexadecimal. This is done because tkinters color system only supports full hexadecimal numbers
         if len(r) == 0:
             r = "00"
         else:
             r = "0"+r
-    b = hex(int(b)).lstrip("0x").rstrip("L")
+    
+    b = hex(int(b)).lstrip("0x").rstrip("L")        # the same as the comment above applies here
     if len(b) < 2:
         if len(b) == 0:
             b = "00"
         else:
             b = "0"+b
-    g = hex(int(g)).lstrip("0x").rstrip("L")
+    
+    g = hex(int(g)).lstrip("0x").rstrip("L")        # the same as the comment above applies here
     if len(g) < 2:
         if len(g) == 0:
             g = "00"
         else:
             g = "0"+g
 
-    return "#"+r+g+b
+    return "#"+r+g+b                                # finally a hashtag is added to the start of the string to support the tkinter color system
 
 def StartTournament():      
     #Where the tourneying happens, just a big loop that changes 
@@ -1054,8 +1056,8 @@ def StartTournament():
             Points = MatchesToPoints(TournamentLog)         
             P1TournamentScore += Points[0]
             globals()[f"MatchCanvas{x}_{y}"].config(background=HeatmapColorHandler(Points[1][0],Points[1][1],Points[1][2]))     #Here the heatmap is updated
-            Hovertip(globals()[f"MatchCanvas{x}_{y}"],text=("P1 winrate: "+str(round(100*(Wins/int(RoundsPerFight.get())),3))+"%"+"\nP2 winrate: "+str(round(100*(Loses/int(RoundsPerFight.get())),3))+"%"+"\nDraw rate: "+str(round(100*(Draws/int(RoundsPerFight.get())),3))+"%"))
-            TournamentLog = []  #Tournamentlog gets reset
+            Hovertip(globals()[f"MatchCanvas{x}_{y}"],text=("P1 winrate: "+str(round(100*Points[1][0],2))+"%"+"\nP2 winrate: "+str(round(100*Points[1][1],2))+"%"+"\nDraw rate: "+str(round(100*Points[1][2],2))+"%"))
+            TournamentLog = []  #Tournamentlog gets reset for next bot
             root.update()
         Result.append((P1TournamentScore,P1Value.get()))    #Results are made and the bots are sorted with their score
         LeaderboardHandler(Result)  #Once the first loop is finished, the results are sendt to the leaderboard handler and the tournament is finished
