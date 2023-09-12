@@ -985,11 +985,9 @@ def GenerateHeatmap():
 def HeatmapColorHandler(P1,P2,draws):
     #The heatmap is only affected to a certain degree, it cannot be amplified, 
     #since it shows the win rate of player 1 and 2, points do not matter, 
-<<<<<<< Updated upstream
     #only winning or losing does. (or tieing)
-=======
+
     #only winning, losing or tieing does.
->>>>>>> Stashed changes
     r = P1 * 255
     b = P2 * 255
     g = draws * 255
