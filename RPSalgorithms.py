@@ -831,7 +831,7 @@ def ResetLogs():    #Resets logs (wow who wouldve thought)
     global strats
     global Duo_strats
 
-    strats = {"RandomBot": -5, "CopyBot": 0, "BeatLastBot": 0, "GenerousBot": 0, "CounterBot": 0,}
+    strats = {"RandomBot": -5, "CopyBot": -5, "BeatLastBot": 0, "GenerousBot": -5, "CounterBot": -5,}
     Duo_strats = strats.copy()
 
 
@@ -1046,19 +1046,23 @@ def StartTournament():
     for y in range(0, Bots):    #Starts the process, this is where player 1 bot is chosen, and when all the bots have been played, the loop ends
         P1TournamentScore = 0
         P1Value.set(TournamentBotList[y])
+
         for x in range(0,Bots):     #This is where player 2 bot is chosen and logs are reset to simulate a fresh start for the new matchup
             P2Value.set(TournamentBotList[x])
             ResetLogs()
+
             for i in range(0,int(RoundsPerFight.get())):    #This is where the matches get played and where the logs are being made
                 if Reset == True and i % int(ResetLogsPerFight.get()) == 0: #This is where the logs are reset, if i is divisble by the Reset logs per fight number, the logs are reset, could be improved
                     ResetLogs()
                 MatchMaker()
+
             Points = MatchesToPoints(TournamentLog)         
             P1TournamentScore += Points[0]
             globals()[f"MatchCanvas{x}_{y}"].config(background=HeatmapColorHandler(Points[1][0],Points[1][1],Points[1][2]))     #Here the heatmap is updated
             Hovertip(globals()[f"MatchCanvas{x}_{y}"],text=("P1 winrate: "+str(round(100*Points[1][0],2))+"%"+"\nP2 winrate: "+str(round(100*Points[1][1],2))+"%"+"\nDraw rate: "+str(round(100*Points[1][2],2))+"%"))
             TournamentLog = []  #Tournamentlog gets reset for next bot
             root.update()
+            
         Result.append((P1TournamentScore,P1Value.get()))    #Results are made and the bots are sorted with their score
         LeaderboardHandler(Result)  #Once the first loop is finished, the results are sendt to the leaderboard handler and the tournament is finished
 
