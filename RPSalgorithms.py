@@ -5,7 +5,8 @@
 
 import enum, random, os, os.path
 from tkinter import Tk, Frame, Label, Button, Canvas, OptionMenu, LEFT, RIGHT, TOP, BOTTOM, StringVar, IntVar, Checkbutton, Entry, Menu, LabelFrame
-from PIL import Image, ImageTk
+from PIL import Image
+from PIL import ImageTk
 PlaysoundFound = True
 try:
     from playsound import playsound
@@ -949,7 +950,11 @@ def Player2ListUpdate(Player):
     ResetLogs()
 
 def GenerateHeatmap():
-    TextSpread = 24
+    if os.uname().sysname == "Linux":       # currently only checks if the system is Linux
+        TextSpread = 22
+    else:
+        TextSpread = 24
+
     # sideways text and grid of canvases
     #Frame shenanigans
     HeatMapFrame = Frame(MainFrame)
