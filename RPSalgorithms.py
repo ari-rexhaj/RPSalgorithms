@@ -68,6 +68,7 @@ if random.randint(1,101) <= 5:  #Nothing to see here
     img = Image.open(FilePath+"/Images/THErock.jpg")
 else:
     img = Image.open(FilePath+"/Images/rock.jpg")
+    
 img = img.resize((Imagesize,Imagesize))
 RockImage = ImageTk.PhotoImage(img)
 img = img.resize((50,50))
@@ -80,32 +81,7 @@ JumpScareImage = ImageTk.PhotoImage(img)
 def LaunchStandardMode():
     root.attributes('-fullscreen',False)
     CleanRoot()
-    global CurrentMode
-    global P1Frame
-    global P1InputFrame
-    global P1Score
-    global TieScore
-    global P2Frame
-    global P2InputFrame
-    global P2Score
-    global InfoFrame
-    global WinnerLabel
-    global AutoFight
-    global AutoFight_InfoFrame
-    global AutoFight_CheckBox
-    global AutoFightText
-    global AutoFightRange
-    global Player2BotLabel
-    global HumanBot_PaperMove
-    global Image1Canvas
-    global Image2Canvas
-    global P2BotList
-    global Starting_P2BotList
-    global P1Value
-    global P2Value
-    global P1List
-    global P2List
-    global HumanBot_ButtonFrame
+    global CurrentMode ,P1Frame ,P1InputFrame ,P1Score ,TieScore ,P2Frame ,P2InputFrame ,P2Score ,InfoFrame ,WinnerLabel ,AutoFight ,AutoFight_InfoFrame ,AutoFight_CheckBox ,AutoFightText ,AutoFightRange ,Player2BotLabel ,HumanBot_PaperMove ,Image1Canvas ,Image2Canvas ,P2BotList ,Starting_P2BotList ,P1Value ,P2Value ,P1List ,P2List ,HumanBot_ButtonFrame
 
     CurrentMode = Mode.Standard
 
@@ -176,17 +152,7 @@ def LaunchTournamentMode():
     #Put all tkinter UI stuff in here and make them global
     root.attributes('-fullscreen',False)
     CleanRoot()
-    global CurrentMode
-    global InputFramesHolder
-    global RoundsPerFight
-    global ResetLogsPerFight
-    global WinningPoints
-    global LosingPoints
-    global DrawPoints
-    global Player1Color
-    global Player2Color
-    global DrawColor
-    global InnerLeaderboardFrame
+    global CurrentMode, InputFramesHolder, RoundsPerFight, ResetLogsPerFight, WinningPoints, LosingPoints, DrawPoints, Player1Color, Player2Color, DrawColor, InnerLeaderboardFrame
 
     CurrentMode = Mode.Tournament
     GenerateHeatmap()
@@ -347,22 +313,19 @@ def HumanBot_RockMove():
     #For human bot, same with the 2 other functions under, 
     # these are for the buttons that display when playing 
     # humanbot
-    global PlayerHasMoved
-    global PlayerMove
+    global PlayerHasMoved, PlayerMove
     PlayerHasMoved = True
     PlayerMove = Move.Rock
     MatchMaker()
     
 def HumanBot_PaperMove():
-    global PlayerHasMoved
-    global PlayerMove
+    global PlayerHasMoved, PlayerMove
     PlayerHasMoved = True
     PlayerMove = Move.Paper
     MatchMaker()
 
 def HumanBot_ScissorsMove():
-    global PlayerHasMoved
-    global PlayerMove
+    global PlayerHasMoved, PlayerMove
     PlayerHasMoved = True
     PlayerMove = Move.Scissors
     MatchMaker()
@@ -424,8 +387,7 @@ def RageBot(RoundLog,Enemy):
     #Will play generousbot, but if the bot loses 5 times in a row, 
     #it will enter a rage mode and play BeatLastBot for the 
     #rest of the game
-    global RageBot_Friendly
-    global Rage
+    global RageBot_Friendly, Rage
 
     if Enemy is None:
         Enemy = Introspection("RageBot")
@@ -505,12 +467,7 @@ def EvaluationBot(RoundLog,Enemy):
     #Has a multitude of different bots it can choose from, 
     #and picks the one that it believes has the highest odds 
     #of winning based off a scoring system
-    global PreviousStrat
-    global strats
-    global Duo
-    global Duo_strats
-    global BotInfo
-    global LastMoves
+    global PreviousStrat, strats, Duo, Duo_strats, BotInfo, LastMoves
 
     if Enemy is None:
         Enemy = Introspection("EvaluationBot")
@@ -589,12 +546,12 @@ def CheckWinner(P1,P2,PlayerLog):
     #the winner and is pretty much the main function, here all the
     #information that is crucial to the Bots is made and this function
     #is the one that calls most of the other functions.
-    global P1ScoreValue
-    global P2ScoreValue
-    global TieScoreValue
+    global P1ScoreValue, P2ScoreValue, TieScoreValue
     
-    if IsAutoFighting == False and CurrentMode == Mode.Standard:
+    if CurrentMode == Mode.Standard:
         ImageHandler(P1,P2)
+        root.update()
+        
 
     if CurrentMode == Mode.Standard:
         if len(PlayerLog) > 1 and PlayerLog[len(PlayerLog)-2] == PlayerLog[len(PlayerLog)-1]:
@@ -641,9 +598,7 @@ def MatchMaker():
     #Matchmakes <3, first identifies the option chosen on the lists, 
     #then has them fight and logs the players and round 
     Enemy = None
-    global P1Bot
-    global P2Bot
-    global Duo
+    global P1Bot, P2Bot, Duo
 
     #Makes the bot chosen on the list of bots into the player for player 1
     match P1Value.get():
@@ -812,25 +767,11 @@ def MatchMaker():
 
 
 def ResetLogs():    #Resets logs (wow who wouldve thought)
-    global RoundLog
+    global RoundLog, PlayerLog, RockMoves_CountBot, PaperMoves_CountBot, ScissorsMoves_CountBot, P1ScoreValue, P2ScoreValue, TieScoreValue, RageBot_Friendly, Rage, strats, Duo_strats
     RoundLog = []
-    global PlayerLog
     PlayerLog = []
 
     #Bot values
-    global RockMoves_CountBot
-    global PaperMoves_CountBot
-    global ScissorsMoves_CountBot
-
-    global P1ScoreValue
-    global P2ScoreValue
-    global TieScoreValue
-
-    global RageBot_Friendly
-    global Rage
-
-    global strats
-    global Duo_strats
 
     strats = {"RandomBot": -5, "CopyBot": -5, "BeatLastBot": 0, "GenerousBot": -5, "CounterBot": -5,}
     Duo_strats = strats.copy()
@@ -853,6 +794,10 @@ def ResetLogs():    #Resets logs (wow who wouldve thought)
         TieScore.config(text="Ties: "+str(TieScoreValue))
     
 def ImageHandler(P1Move,P2Move):    #Handles what images to use depending on the player moves
+
+    Image1Canvas.delete("all")
+    Image2Canvas.delete("all")
+
     match P1Move:
         case Move.Rock:
             Image1Canvas.create_image(Imagesize/2,Imagesize/2,image=RockImage)
@@ -901,8 +846,7 @@ BotInfo = False
 def Player2ListUpdate(Player):      
     #If the easteregg is activated, descriptions of what 
     #the bots do will be displayed when a bot is selected.
-    global BotInfo
-    global PreviousStrat
+    global BotInfo, PreviousStrat
     Player2BotLabel.config(text="")
     if BotInfo == True:
         match Player:
@@ -1005,7 +949,7 @@ def HeatmapColorHandler(P1,P2,draws):
         g = 0
 
     r = hex(int(r)).lstrip("0x").rstrip("L")        # turns the number into its hexadecimal form
-    if len(r) < 2:                                  # since pythons hex() function returns the hexadecimal as just a single character or nothing if small enough, ergo we check the len of the string and depending on its value we enter str(0) into the hexadecimal. This is done because tkinters color system only supports full hexadecimal numbers
+    if len(r) < 2:                                  # pythons hex() function returns the hexadecimal as just a single character or nothing if small enough, ergo we check the len of the string and depending on its value we enter "0" into the hexadecimal. This is done because tkinters color system only supports full hexadecimal numbers
         if len(r) == 0:
             r = "00"
         else:
@@ -1037,11 +981,7 @@ def StartTournament():
             globals()[f"MatchCanvas{x}_{y}"].config(bg="#757575")
     root.update()
 
-    global Player1_Tournament
-    global Player2_Tournament
-    global TournamentLog
-    global RoundsPerFight
-    global ResetLogsPerFight
+    global Player1_Tournament, Player2_Tournament, TournamentLog, RoundsPerFight, ResetLogsPerFight
     Reset = True
     if ResetLogsPerFight.get() == "0":
         Reset = False
@@ -1077,9 +1017,7 @@ def MatchesToPoints(Matches):
     #Translates the matches of the games 
     #into points and wins and returns them
     #Returns them in two forms
-    global Wins
-    global Loses
-    global Draws
+    global Wins, Loses, Draws
     Wins = 0
     Loses = 0
     Draws = 0
